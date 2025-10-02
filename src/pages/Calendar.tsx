@@ -95,7 +95,6 @@ export default function Calendar() {
 
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
     } catch (error) {
-      console.error('Error completing appointment:', error);
       toast({
         title: el.appointments.createError,
         variant: 'destructive',

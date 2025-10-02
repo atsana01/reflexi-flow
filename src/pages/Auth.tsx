@@ -37,6 +37,20 @@ export default function Auth() {
         if (error) throw error;
         toast({ title: "Επιτυχής σύνδεση!" });
       } else {
+        // Check if email is allowed before attempting signup
+        const { data: isAllowed } = await supabase
+          .rpc('is_email_allowed', { check_email: email });
+        
+        if (!isAllowed) {
+          toast({
+            variant: "destructive",
+            title: "Μη εξουσιοδοτημένο email",
+            description: "Η εγγραφή είναι διαθέσιμη μόνο για εξουσιοδοτημένους χρήστες.",
+          });
+          setLoading(false);
+          return;
+        }
+
         const redirectUrl = `${window.location.origin}/`;
         const { error } = await supabase.auth.signUp({
           email,
@@ -55,10 +69,23 @@ export default function Auth() {
         });
       }
     } catch (error: any) {
+      // User-friendly error messages in Greek
+      let errorMessage = "Παρακαλώ δοκιμάστε ξανά.";
+      
+      if (error.message?.includes("Invalid login credentials")) {
+        errorMessage = "Λάθος email ή κωδικός πρόσβασης.";
+      } else if (error.message?.includes("Email not confirmed")) {
+        errorMessage = "Παρακαλώ επιβεβαιώστε το email σας πρώτα.";
+      } else if (error.message?.includes("User already registered")) {
+        errorMessage = "Το email είναι ήδη εγγεγραμμένο.";
+      } else if (error.message?.includes("εξουσιοδοτημένους")) {
+        errorMessage = "Η εγγραφή είναι διαθέσιμη μόνο για εξουσιοδοτημένους χρήστες.";
+      }
+
       toast({
         variant: "destructive",
         title: "Σφάλμα",
-        description: error.message,
+        description: errorMessage,
       });
     } finally {
       setLoading(false);

@@ -113,7 +113,10 @@ export default function ClientDetail() {
 
       navigate('/clients');
     } catch (error) {
-      console.error('Error archiving client:', error);
+      toast({
+        title: el.clients.createError,
+        variant: 'destructive',
+      });
     }
   };
 

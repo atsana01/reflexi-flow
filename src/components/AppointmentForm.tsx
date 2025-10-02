@@ -109,7 +109,6 @@ export function AppointmentForm({ clientId, onSuccess, onCancel }: AppointmentFo
 
       onSuccess();
     } catch (error) {
-      console.error('Error creating appointment:', error);
       toast({
         title: el.appointments.createError,
         variant: 'destructive',

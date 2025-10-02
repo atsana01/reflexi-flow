@@ -102,7 +102,6 @@ export function ClientForm({ client, onSuccess, onCancel }: ClientFormProps) {
       queryClient.invalidateQueries({ queryKey: ['clients'] });
       onSuccess(client.id);
     } catch (error) {
-      console.error('Error saving client:', error);
       toast({
         title: el.clients.createError,
         variant: 'destructive',
