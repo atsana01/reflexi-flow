@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { el } from '@/lib/translations';
 import { Button } from '@/components/ui/button';
@@ -8,9 +9,18 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Plus, Search, Phone, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { ClientForm } from '@/components/ClientForm';
 
 export default function Clients() {
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
+  const [showForm, setShowForm] = useState(false);
 
   const { data: clients, isLoading } = useQuery({
     queryKey: ['clients', search],
@@ -49,13 +59,26 @@ export default function Clients() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">{el.nav.clients}</h1>
-        <Button asChild>
-          <Link to="/clients/new">
-            <Plus className="mr-2 h-4 w-4" />
-            {el.clients.addClient}
-          </Link>
+        <Button onClick={() => setShowForm(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          {el.clients.addClient}
         </Button>
       </div>
+
+      <Dialog open={showForm} onOpenChange={setShowForm}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{el.clients.addClient}</DialogTitle>
+          </DialogHeader>
+          <ClientForm
+            onSuccess={(clientId) => {
+              setShowForm(false);
+              navigate(`/clients/${clientId}`);
+            }}
+            onCancel={() => setShowForm(false)}
+          />
+        </DialogContent>
+      </Dialog>
 
       <div className="relative">
         <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />

@@ -42,14 +42,25 @@ export const el = {
     firstName: "Όνομα",
     lastName: "Επώνυμο",
     dateOfBirth: "Ημερομηνία γέννησης",
-    registrationDate: "Ημ. εγγραφής"
+    registrationDate: "Ημ. εγγραφής",
+    clientCreated: "Ο πελάτης δημιουργήθηκε",
+    clientUpdated: "Τα στοιχεία ενημερώθηκαν",
+    clientArchived: "Ο πελάτης αρχειοθετήθηκε",
+    createError: "Αποτυχία δημιουργίας πελάτη. Παρακαλώ δοκιμάστε ξανά.",
+    fieldRequired: "Το πεδίο είναι υποχρεωτικό",
+    invalidEmail: "Μη έγκυρο email",
+    medicalNotes: "Πάθηση / Ιατρικές σημειώσεις",
+    packageDefaults: "Προεπιλογή πακέτου",
+    overview: "Επισκόπηση",
+    lastSession: "Τελευταία συνεδρία"
   },
   clientActions: {
     newSession: "Νέα συνεδρία",
     newAppointment: "Νέο ραντεβού",
     addPayment: "Καταχώριση πληρωμής",
     editDetails: "Επεξεργασία στοιχείων",
-    newPackage: "Νέο πακέτο"
+    newPackage: "Νέο πακέτο",
+    archive: "Αρχειοθέτηση"
   },
   sessions: {
     title: "Συνεδρίες",
@@ -66,7 +77,9 @@ export const el = {
   appointments: {
     title: "Ραντεβού",
     start: "Έναρξη",
+    startDateTime: "Ημερομηνία & Ώρα Έναρξης",
     end: "Λήξη",
+    endTime: "Ώρα Λήξης",
     status: "Κατάσταση",
     scheduled: "Προγραμματισμένο",
     completed: "Ολοκληρωμένο",
@@ -75,7 +88,17 @@ export const el = {
     notes: "Σημειώσεις",
     create: "Νέο ραντεβού",
     markCompleted: "Σήμανση ως ολοκληρωμένο",
-    selectClient: "Επιλογή πελάτη"
+    selectClient: "Επιλογή πελάτη",
+    client: "Πελάτης",
+    created: "Το ραντεβού δημιουργήθηκε",
+    completedWithSession: "Το ραντεβού ολοκληρώθηκε και δημιουργήθηκε συνεδρία",
+    completedOnly: "Το ραντεβού ολοκληρώθηκε",
+    createError: "Αποτυχία δημιουργίας ραντεβού. Παρακαλώ δοκιμάστε ξανά.",
+    overlapWarning: "Υπάρχει ήδη ραντεβού κοντά σε αυτή την ώρα.",
+    createSessionPrompt: "Το ραντεβού ολοκληρώθηκε. Δημιουργία συνεδρίας;",
+    yes: "Ναι",
+    no: "Όχι",
+    endMustBeAfterStart: "Η ώρα λήξης πρέπει να είναι μετά την έναρξη"
   },
   payments: {
     title: "Πληρωμές",
@@ -101,7 +124,8 @@ export const el = {
     status: "Κατάσταση",
     active: "Ενεργό",
     completed: "Ολοκληρωμένο",
-    expired: "Ληγμένο"
+    expired: "Ληγμένο",
+    completedBanner: "Το πακέτο ολοκληρώθηκε. Θέλετε να δημιουργήσετε νέο;"
   },
   reports: {
     dailyTotals: "Ημερήσια σύνολα",
