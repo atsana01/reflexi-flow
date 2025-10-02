@@ -56,13 +56,6 @@ export type Database = {
             referencedRelation: "clients"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "appointments_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "v_client_balances"
-            referencedColumns: ["client_id"]
-          },
         ]
       }
       audit_log: {
@@ -194,13 +187,6 @@ export type Database = {
             referencedRelation: "clients"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "packages_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "v_client_balances"
-            referencedColumns: ["client_id"]
-          },
         ]
       }
       payments: {
@@ -244,13 +230,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "clients"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "payments_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "v_client_balances"
-            referencedColumns: ["client_id"]
           },
           {
             foreignKeyName: "payments_session_id_fkey"
@@ -328,13 +307,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "sessions_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "v_client_balances"
-            referencedColumns: ["client_id"]
-          },
-          {
             foreignKeyName: "sessions_package_id_fkey"
             columns: ["package_id"]
             isOneToOne: false
@@ -363,16 +335,7 @@ export type Database = {
       }
     }
     Views: {
-      v_client_balances: {
-        Row: {
-          account_id: string | null
-          balance_due: number | null
-          client_id: string | null
-          total_billed: number | null
-          total_paid: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       client_balances: {
