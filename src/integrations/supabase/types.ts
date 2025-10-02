@@ -14,16 +14,421 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      appointments: {
+        Row: {
+          account_id: string
+          client_id: string
+          created_at: string | null
+          end_time: string | null
+          id: string
+          notes: string | null
+          start_time: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          account_id: string
+          client_id: string
+          created_at?: string | null
+          end_time?: string | null
+          id?: string
+          notes?: string | null
+          start_time: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          account_id?: string
+          client_id?: string
+          created_at?: string | null
+          end_time?: string | null
+          id?: string
+          notes?: string | null
+          start_time?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_balances"
+            referencedColumns: ["client_id"]
+          },
+        ]
+      }
+      audit_log: {
+        Row: {
+          account_id: string
+          action: string
+          at: string | null
+          details: Json | null
+          id: number
+          row_id: string | null
+          table_name: string
+        }
+        Insert: {
+          account_id: string
+          action: string
+          at?: string | null
+          details?: Json | null
+          id?: never
+          row_id?: string | null
+          table_name: string
+        }
+        Update: {
+          account_id?: string
+          action?: string
+          at?: string | null
+          details?: Json | null
+          id?: never
+          row_id?: string | null
+          table_name?: string
+        }
+        Relationships: []
+      }
+      clients: {
+        Row: {
+          account_id: string
+          active: boolean | null
+          address_line: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          email: string | null
+          first_name: string
+          id: string
+          last_name: string
+          notes: string | null
+          pathisi: string | null
+          phone: string | null
+          registration_date: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          account_id: string
+          active?: boolean | null
+          address_line?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          email?: string | null
+          first_name: string
+          id?: string
+          last_name: string
+          notes?: string | null
+          pathisi?: string | null
+          phone?: string | null
+          registration_date?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          account_id?: string
+          active?: boolean | null
+          address_line?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          email?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          notes?: string | null
+          pathisi?: string | null
+          phone?: string | null
+          registration_date?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      packages: {
+        Row: {
+          account_id: string
+          client_id: string
+          created_at: string | null
+          end_date: string | null
+          id: string
+          price_per_session: number | null
+          sessions_total: number
+          sessions_used: number
+          start_date: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          account_id: string
+          client_id: string
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          price_per_session?: number | null
+          sessions_total: number
+          sessions_used?: number
+          start_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          account_id?: string
+          client_id?: string
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          price_per_session?: number | null
+          sessions_total?: number
+          sessions_used?: number
+          start_date?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "packages_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "packages_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_balances"
+            referencedColumns: ["client_id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          account_id: string
+          amount: number
+          client_id: string
+          created_at: string | null
+          id: string
+          method: string | null
+          notes: string | null
+          paid_at: string | null
+          session_id: string | null
+        }
+        Insert: {
+          account_id: string
+          amount: number
+          client_id: string
+          created_at?: string | null
+          id?: string
+          method?: string | null
+          notes?: string | null
+          paid_at?: string | null
+          session_id?: string | null
+        }
+        Update: {
+          account_id?: string
+          amount?: number
+          client_id?: string
+          created_at?: string | null
+          id?: string
+          method?: string | null
+          notes?: string | null
+          paid_at?: string | null
+          session_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_balances"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "payments_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          full_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      sessions: {
+        Row: {
+          account_id: string
+          bill_amount: number | null
+          client_id: string
+          created_at: string | null
+          duration_minutes: number | null
+          id: string
+          notes: string | null
+          package_id: string | null
+          session_number_in_package: number | null
+          started_at: string
+          updated_at: string | null
+        }
+        Insert: {
+          account_id: string
+          bill_amount?: number | null
+          client_id: string
+          created_at?: string | null
+          duration_minutes?: number | null
+          id?: string
+          notes?: string | null
+          package_id?: string | null
+          session_number_in_package?: number | null
+          started_at?: string
+          updated_at?: string | null
+        }
+        Update: {
+          account_id?: string
+          bill_amount?: number | null
+          client_id?: string
+          created_at?: string | null
+          duration_minutes?: number | null
+          id?: string
+          notes?: string | null
+          package_id?: string | null
+          session_number_in_package?: number | null
+          started_at?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sessions_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sessions_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "v_client_balances"
+            referencedColumns: ["client_id"]
+          },
+          {
+            foreignKeyName: "sessions_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "packages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      v_client_balances: {
+        Row: {
+          account_id: string | null
+          balance_due: number | null
+          client_id: string | null
+          total_billed: number | null
+          total_paid: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      client_balances: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          balance_due: number
+          client_id: string
+          total_billed: number
+          total_paid: number
+        }[]
+      }
+      create_session: {
+        Args: {
+          p_client_id: string
+          p_duration_minutes?: number
+          p_notes?: string
+          p_started_at?: string
+        }
+        Returns: {
+          account_id: string
+          bill_amount: number | null
+          client_id: string
+          created_at: string | null
+          duration_minutes: number | null
+          id: string
+          notes: string | null
+          package_id: string | null
+          session_number_in_package: number | null
+          started_at: string
+          updated_at: string | null
+        }
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      sessions_per_day: {
+        Args: { p_from: string; p_to: string }
+        Returns: {
+          day: string
+          sessions_count: number
+        }[]
+      }
+      sessions_per_month: {
+        Args: { p_year: number }
+        Returns: {
+          month: string
+          sessions_count: number
+        }[]
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "owner" | "staff"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +555,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["owner", "staff"],
+    },
   },
 } as const
