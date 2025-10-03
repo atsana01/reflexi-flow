@@ -111,10 +111,12 @@ export type Database = {
           account_id: string
           active: boolean | null
           address_line: string | null
+          consent_date: string | null
           created_at: string | null
           date_of_birth: string | null
           email: string | null
           first_name: string
+          gdpr_consent: boolean
           id: string
           last_name: string
           notes: string | null
@@ -127,10 +129,12 @@ export type Database = {
           account_id: string
           active?: boolean | null
           address_line?: string | null
+          consent_date?: string | null
           created_at?: string | null
           date_of_birth?: string | null
           email?: string | null
           first_name: string
+          gdpr_consent?: boolean
           id?: string
           last_name: string
           notes?: string | null
@@ -143,10 +147,12 @@ export type Database = {
           account_id?: string
           active?: boolean | null
           address_line?: string | null
+          consent_date?: string | null
           created_at?: string | null
           date_of_birth?: string | null
           email?: string | null
           first_name?: string
+          gdpr_consent?: boolean
           id?: string
           last_name?: string
           notes?: string | null

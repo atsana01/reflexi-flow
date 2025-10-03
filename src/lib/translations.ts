@@ -52,7 +52,9 @@ export const el = {
     medicalNotes: "Πάθηση / Ιατρικές σημειώσεις",
     packageDefaults: "Προεπιλογή πακέτου",
     overview: "Επισκόπηση",
-    lastSession: "Τελευταία συνεδρία"
+    lastSession: "Τελευταία συνεδρία",
+    gdprConsent: "Συναινώ στην επεξεργασία των προσωπικών μου δεδομένων σύμφωνα με τον GDPR",
+    gdprConsentRequired: "Η συναίνεση είναι απαραίτητη για τη δημιουργία πελάτη"
   },
   clientActions: {
     newSession: "Νέα συνεδρία",

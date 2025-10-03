@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -26,6 +27,7 @@ export function ClientForm({ client, onSuccess, onCancel }: ClientFormProps) {
     address_line: client?.address_line || '',
     pathisi: client?.pathisi || '',
     notes: client?.notes || '',
+    gdpr_consent: client?.gdpr_consent || false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -42,6 +44,10 @@ export function ClientForm({ client, onSuccess, onCancel }: ClientFormProps) {
 
     if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = el.clients.invalidEmail;
+    }
+
+    if (!client && !formData.gdpr_consent) {
+      newErrors.gdpr_consent = el.clients.gdprConsentRequired;
     }
 
     setErrors(newErrors);
@@ -84,6 +90,7 @@ export function ClientForm({ client, onSuccess, onCancel }: ClientFormProps) {
           .insert({
             ...formData,
             account_id: user.user.id,
+            consent_date: formData.gdpr_consent ? new Date().toISOString() : null,
           })
           .select()
           .single();
@@ -210,6 +217,31 @@ export function ClientForm({ client, onSuccess, onCancel }: ClientFormProps) {
           rows={3}
         />
       </div>
+
+      {!client && (
+        <div className="space-y-2 pt-2">
+          <div className="flex items-start gap-2">
+            <Checkbox
+              id="gdpr_consent"
+              checked={formData.gdpr_consent}
+              onCheckedChange={(checked) =>
+                setFormData({ ...formData, gdpr_consent: !!checked })
+              }
+            />
+            <div className="space-y-1">
+              <Label
+                htmlFor="gdpr_consent"
+                className="text-sm font-normal leading-tight cursor-pointer"
+              >
+                {el.clients.gdprConsent}*
+              </Label>
+              {errors.gdpr_consent && (
+                <p className="text-sm text-destructive">{errors.gdpr_consent}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex gap-3 justify-end pt-4">
         <Button type="button" variant="outline" onClick={onCancel}>
