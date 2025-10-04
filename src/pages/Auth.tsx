@@ -8,6 +8,23 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
+import { z } from 'zod';
+
+const loginSchema = z.object({
+  email: z.string().trim().email('Μη έγκυρη διεύθυνση email').max(255, 'Το email πρέπει να είναι έως 255 χαρακτήρες'),
+  password: z.string().min(6, 'Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες'),
+});
+
+const signupSchema = z.object({
+  email: z.string().trim().email('Μη έγκυρη διεύθυνση email').max(255, 'Το email πρέπει να είναι έως 255 χαρακτήρες'),
+  password: z.string()
+    .min(10, 'Ο κωδικός πρέπει να έχει τουλάχιστον 10 χαρακτήρες')
+    .regex(/[A-Z]/, 'Ο κωδικός πρέπει να περιέχει τουλάχιστον ένα κεφαλαίο γράμμα')
+    .regex(/[a-z]/, 'Ο κωδικός πρέπει να περιέχει τουλάχιστον ένα πεζό γράμμα')
+    .regex(/[0-9]/, 'Ο κωδικός πρέπει να περιέχει τουλάχιστον έναν αριθμό')
+    .regex(/[^A-Za-z0-9]/, 'Ο κωδικός πρέπει να περιέχει τουλάχιστον έναν ειδικό χαρακτήρα'),
+  fullName: z.string().trim().min(1, 'Το πλήρες όνομα είναι υποχρεωτικό').max(100, 'Το όνομα πρέπει να είναι έως 100 χαρακτήρες'),
+});
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -26,6 +43,25 @@ export default function Auth() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate input with Zod
+    try {
+      if (isLogin) {
+        loginSchema.parse({ email, password });
+      } else {
+        signupSchema.parse({ email, password, fullName });
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          variant: "destructive",
+          title: "Σφάλμα επικύρωσης",
+          description: error.errors[0].message,
+        });
+        return;
+      }
+    }
+
     setLoading(true);
 
     try {
@@ -133,8 +169,13 @@ export default function Auth() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={6}
+                minLength={isLogin ? 6 : 10}
               />
+              {!isLogin && (
+                <p className="text-xs text-muted-foreground">
+                  Ο κωδικός πρέπει να έχει τουλάχιστον 10 χαρακτήρες, κεφαλαία, πεζά, αριθμό και ειδικό χαρακτήρα.
+                </p>
+              )}
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">

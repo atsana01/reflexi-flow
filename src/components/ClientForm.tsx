@@ -8,6 +8,19 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
+import { z } from 'zod';
+
+const clientSchema = z.object({
+  first_name: z.string().trim().min(1, el.clients.fieldRequired).max(100, 'Το όνομα πρέπει να είναι έως 100 χαρακτήρες'),
+  last_name: z.string().trim().min(1, el.clients.fieldRequired).max(100, 'Το επώνυμο πρέπει να είναι έως 100 χαρακτήρες'),
+  email: z.string().trim().email(el.clients.invalidEmail).max(255, 'Το email πρέπει να είναι έως 255 χαρακτήρες').optional().or(z.literal('')),
+  phone: z.string().trim().max(20, 'Το τηλέφωνο πρέπει να είναι έως 20 χαρακτήρες').optional().or(z.literal('')),
+  date_of_birth: z.string().optional().or(z.literal('')),
+  address_line: z.string().trim().max(500, 'Η διεύθυνση πρέπει να είναι έως 500 χαρακτήρες').optional().or(z.literal('')),
+  pathisi: z.string().trim().max(5000, 'Οι ιατρικές σημειώσεις πρέπει να είναι έως 5000 χαρακτήρες').optional().or(z.literal('')),
+  notes: z.string().trim().max(2000, 'Οι σημειώσεις πρέπει να είναι έως 2000 χαρακτήρες').optional().or(z.literal('')),
+  gdpr_consent: z.boolean(),
+});
 
 interface ClientFormProps {
   client?: any;
@@ -32,26 +45,29 @@ export function ClientForm({ client, onSuccess, onCancel }: ClientFormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.first_name.trim()) {
-      newErrors.first_name = el.clients.fieldRequired;
+    try {
+      clientSchema.parse(formData);
+      
+      // Additional check for GDPR consent on new clients
+      if (!client && !formData.gdpr_consent) {
+        setErrors({ gdpr_consent: el.clients.gdprConsentRequired });
+        return false;
+      }
+      
+      setErrors({});
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            newErrors[err.path[0] as string] = err.message;
+          }
+        });
+        setErrors(newErrors);
+      }
+      return false;
     }
-
-    if (!formData.last_name.trim()) {
-      newErrors.last_name = el.clients.fieldRequired;
-    }
-
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = el.clients.invalidEmail;
-    }
-
-    if (!client && !formData.gdpr_consent) {
-      newErrors.gdpr_consent = el.clients.gdprConsentRequired;
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

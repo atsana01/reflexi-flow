@@ -15,6 +15,24 @@ import {
 } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import { z } from 'zod';
+
+const appointmentSchema = z.object({
+  client_id: z.string().uuid('Παρακαλώ επιλέξτε πελάτη'),
+  start_time: z.string().min(1, 'Η ώρα έναρξης είναι υποχρεωτική'),
+  end_time: z.string().optional(),
+  notes: z.string().max(2000, 'Οι σημειώσεις πρέπει να είναι έως 2000 χαρακτήρες').optional(),
+}).refine((data) => {
+  if (data.end_time && data.start_time) {
+    const start = new Date(data.start_time);
+    const end = new Date(data.end_time);
+    return end > start;
+  }
+  return true;
+}, {
+  message: el.appointments.endMustBeAfterStart,
+  path: ['end_time'],
+});
 
 interface AppointmentFormProps {
   clientId?: string;
@@ -52,26 +70,39 @@ export function AppointmentForm({ clientId, onSuccess, onCancel }: AppointmentFo
   }, [clientId]);
 
   const validate = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!selectedClientId) {
-      newErrors.client = el.clients.fieldRequired;
-    }
-
-    if (!startDateTime) {
-      newErrors.startDateTime = el.clients.fieldRequired;
-    }
-
-    if (endTime) {
-      const start = new Date(startDateTime);
-      const end = new Date(`${startDateTime.split('T')[0]}T${endTime}`);
-      if (end <= start) {
-        newErrors.endTime = el.appointments.endMustBeAfterStart;
+    try {
+      const endTimeValue = endTime
+        ? `${startDateTime.split('T')[0]}T${endTime}`
+        : undefined;
+      
+      appointmentSchema.parse({
+        client_id: selectedClientId,
+        start_time: startDateTime,
+        end_time: endTimeValue,
+        notes: notes || undefined,
+      });
+      
+      setErrors({});
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors: Record<string, string> = {};
+        error.errors.forEach((err) => {
+          const field = err.path[0] as string;
+          if (field === 'client_id') {
+            newErrors.client = err.message;
+          } else if (field === 'start_time') {
+            newErrors.startDateTime = err.message;
+          } else if (field === 'end_time') {
+            newErrors.endTime = err.message;
+          } else {
+            newErrors[field] = err.message;
+          }
+        });
+        setErrors(newErrors);
       }
+      return false;
     }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
