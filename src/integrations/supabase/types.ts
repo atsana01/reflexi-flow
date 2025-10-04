@@ -339,6 +339,30 @@ export type Database = {
           },
         ]
       }
+      staff_accounts: {
+        Row: {
+          account_id: string
+          created_at: string | null
+          created_by: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          account_id: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
